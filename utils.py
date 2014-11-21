@@ -140,16 +140,16 @@ def get_sza(times, lat, long):
 
 
 def read_tracker_log(tracker_log):
+    """ Reads data from the log file of the solar tracker (TrackerCam)
+    """
     data = {}
     values = []
 
     with open(tracker_log, 'ra') as fid:
-        lines = fid.readlines()
-        for no, line in enumerate(lines):
-            if no == 2:
+        for no, line in enumerate(fid):
+            if no == 2:  # the second line contains the column titles
                 data["fields"] = line.strip().split("\t")
                 values = [[] for _x in range(len(data["fields"]))]  # [[]] * 6 just gives 6 refs to the same list
-                print values
                 continue
             elif no < 3:  # skip the header
                 continue
