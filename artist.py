@@ -184,10 +184,9 @@ def make_retrieval_diagnostics_figure(oof_csv_file):
     gs = gridspec.GridSpec(subplots, 1)
     gs.update(wspace=0.025, hspace=0.0, top=0.97, bottom=0.03, right=0.97)
 
+    marker = "."
     if delta_days < 1:
         marker = "o"
-    elif delta_days > 11:
-        marker = "."
 
     if delta_days < 1:
         minor = mdates.MinuteLocator(byminute=[15, 30, 45])
