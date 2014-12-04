@@ -1,7 +1,7 @@
 __author__ = 'filipd'
 
 import datetime
-import tccon_site as ts
+#import tccon_site as ts
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.gridspec as gridspec
@@ -268,15 +268,31 @@ def tracker_diagnostics(tracker_log):
         dict(col=7, label="4Q score [V]", color="grey"),
         dict(col=4, label="Tracker elev. [deg.]", color="b"),
         dict(col=3, label="Tracker azim. [deg.]", color="g"),
+	dict(col=9, label="Elev. offset [deg.]", color="orange"),
+	dict(col=10, label="Azim. offset [deg.]", color="orange"),
     ]
 
     gs = gridspec.GridSpec(len(figs), 1)
     gs.update(wspace=0.025, hspace=0.0, top=0.97, bottom=0.03, right=0.97)
 
+    plt.figure(figsize=[10, 2*len(figs)])
+    minutes = mdates.MinuteLocator(byminute=[10, 20, 30, 40, 50])
+    hours = mdates.HourLocator()
+
     for no, item in enumerate(figs):
         plt.subplot(gs[no])
-        plt.plot(data["data"][0], data["data"][item["col"]], color=item["color"], marker='.')
+	if item["col"] < 9:
+	        plt.plot(data["data"][0], data["data"][item["col"]], color=item["color"], marker='.', linestyle="none")
+	else:
+		x = np.array(data["data"][0])
+		y = np.array(data["data"][item["col"]])
+		mask = y != -99.99
+		plt.plot(x[mask], y[mask], marker=".", color=item["color"], linestyle="none")
         plt.ylabel(item["label"])
         ax = plt.gca()
         hide_bottom_edge_ticks(ax)
+	ax.xaxis.set_major_locator(hours)
+	ax.xaxis.set_minor_locator(minutes)
+	ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+	ax.set_xlim(data["data"][0][0], data["data"][0][-1])
     plt.savefig("/home/filipd/temp/tracker.png")
