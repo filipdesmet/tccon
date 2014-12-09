@@ -3,7 +3,8 @@ import os
 import datetime
 import numpy as np
 import matplotlib.dates as mdates
-import Pysolar
+#import Pysolar
+from settings import DAY_TCCON_DIR
 
 
 def read_tccon_file(file_path):
@@ -144,7 +145,6 @@ def read_tracker_log(tracker_log):
     """
     data = {}
     values = []
-
     with open(tracker_log, 'ra') as fid:
         for no, line in enumerate(fid):
             if no == 2:  # the second line contains the column titles
@@ -167,3 +167,37 @@ def read_tracker_log(tracker_log):
                             values[nr].append(a_value)
         data["data"] = values
     return data
+
+
+def create_filelist(site, start_date, output_file, end_date=None):
+    """ Write a filelist file for the specified site and date range
+    If no optional end date is given, today is taken as the end date.
+    
+    Arguments:
+    site -- name of the site for which to create the filelist
+    start_date -- (datetime) starting date of the filelist
+    output_file -- file to which the file list will be written, any existing file is overwritten without warning
+    
+    Optional arguments:
+    end_date -- end date of the file list
+    """
+    if end_date is None:
+      end_date = datetime.datetime.today()
+    
+    day = datetime.timedelta(days=1)
+    file_list = []
+    site_dir = DAY_TCCON_DIR.format(site=site)
+    
+    next_date = start_date
+    while next_date < end_date:
+      archdir = next_date.strftime(site_dir)
+      next_date += day
+      if not os.path.exists(archdir):
+	continue
+      files = os.listdir(archdir)
+      for item in files:
+	if "dual" in item:
+	  file_list.append(os.path.join(archdir, item) + "\n")
+      
+    with open(output_file, 'w') as fid:
+      fid.writelines(file_list)
