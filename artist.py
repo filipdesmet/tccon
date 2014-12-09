@@ -141,7 +141,7 @@ def make_meteo_figure(site, date, output_file):
     plt.savefig(output_file)
 
 
-def make_retrieval_diagnostics_figure(oof_csv_file):
+def make_retrieval_diagnostics_figure(oof_csv_file, figure_file=None):
 
     data = utils.read_tccon_file(oof_csv_file)
 
@@ -244,8 +244,10 @@ def make_retrieval_diagnostics_figure(oof_csv_file):
     ax = plt.gca()
     ax.xaxis.set_major_formatter(mdates.DateFormatter(date_format))
 
-
-    plt.savefig("/home/filipd/temp/test.png")
+    if figure_file is None:
+	plt.savefig("retrieval.png")
+    else:
+        plt.savefig(figure_file)
 
 
 def hide_bottom_edge_ticks(ax):
@@ -259,7 +261,7 @@ def hide_bottom_edge_ticks(ax):
     ax.set_yticklabels(a)
 
 
-def tracker_diagnostics(tracker_log):
+def tracker_diagnostics(tracker_log, figure_file=None):
     data = utils.read_tracker_log(tracker_log)
 
     figs = [
@@ -275,6 +277,7 @@ def tracker_diagnostics(tracker_log):
     gs.update(wspace=0.025, hspace=0.0, top=0.97, bottom=0.03, right=0.97)
 
     plt.figure(figsize=[10, 2*len(figs)])
+    plt.figtext(0.01, 0.99, tracker_log[-128:])
     minutes = mdates.MinuteLocator(byminute=[10, 20, 30, 40, 50])
     hours = mdates.HourLocator()
 
@@ -294,4 +297,7 @@ def tracker_diagnostics(tracker_log):
 	ax.xaxis.set_minor_locator(minutes)
 	ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 	ax.set_xlim(data["data"][0][0], data["data"][0][-1])
-    plt.savefig("/home/filipd/temp/tracker.png")
+    if figure_file is None:
+	plt.savefig("tracker.png")
+    else:
+        plt.savefig(figure_file)
