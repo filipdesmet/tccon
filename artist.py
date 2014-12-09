@@ -259,7 +259,7 @@ def hide_bottom_edge_ticks(ax):
     ax.set_yticklabels(a)
 
 
-def tracker_diagnostics(tracker_log):
+def tracker_diagnostics(tracker_log, output_file=""):
     data = utils.read_tracker_log(tracker_log)
 
     figs = [
@@ -294,4 +294,6 @@ def tracker_diagnostics(tracker_log):
 	ax.xaxis.set_minor_locator(minutes)
 	ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 	ax.set_xlim(data["data"][0][0], data["data"][0][-1])
-    plt.savefig("/home/filipd/temp/tracker.png")
+    if len(output_file) == 0:
+      output_file = "diagnostics.png"
+    plt.savefig(output_file)
