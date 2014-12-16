@@ -4,7 +4,8 @@ import datetime
 import numpy as np
 import matplotlib.dates as mdates
 #import Pysolar
-from settings import DAY_TCCON_DIR
+from settings import DAY_TCCON_DIR, TRACKER_LOG
+import artist
 
 
 def read_tccon_file(file_path):
@@ -201,3 +202,21 @@ def create_filelist(site, start_date, output_file, end_date=None):
       
     with open(output_file, 'w') as fid:
       fid.writelines(file_list)
+
+
+def tracker_diagnostics(site, start_date, end_date):
+    """Create a tracker diagnostics figure for a site for all dates in the specified range.
+
+    Arguments:
+
+    site -- Name of the site
+    start_date -- A datetime, start of the date range
+    end_date -- A datetime, end of the date range
+    """
+    day = datetime.timedelta(days=1)
+    today = start_date
+    while today <= end_date:
+	log_file = today.strftime(TRACKER_LOG.format(site=site))
+	if os.path.exists(log_file):
+	    artist.tracker_diagnostics(log_file, figure_file=today.strftime("tracker%Y%m%d"))
+	today += day

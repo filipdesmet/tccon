@@ -139,6 +139,7 @@ def make_meteo_figure(site, date, output_file):
             ax.axvspan(tsl[i], tsl[i+1], facecolor='#dddddd', edgecolor="none", zorder=0)
 
     plt.savefig(output_file)
+    plt.close()
 
 
 def make_retrieval_diagnostics_figure(oof_csv_file, figure_file=None):
@@ -248,6 +249,7 @@ def make_retrieval_diagnostics_figure(oof_csv_file, figure_file=None):
 	plt.savefig("retrieval.png")
     else:
         plt.savefig(figure_file)
+    plt.close()
 
 
 def hide_bottom_edge_ticks(ax):
@@ -301,3 +303,4 @@ def tracker_diagnostics(tracker_log, figure_file=None):
 	plt.savefig("tracker.png")
     else:
         plt.savefig(figure_file)
+    plt.close()
