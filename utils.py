@@ -197,7 +197,7 @@ def create_filelist(site, start_date, output_file, end_date=None):
 	continue
       files = os.listdir(archdir)
       for item in files:
-	if "dual" in item:
+	if "dual" in item or 'ingaas' in item:
 	  file_list.append(os.path.join(archdir, item) + "\n")
       
     with open(output_file, 'w') as fid:
